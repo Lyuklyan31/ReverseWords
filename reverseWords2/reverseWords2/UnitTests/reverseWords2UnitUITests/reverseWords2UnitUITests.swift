@@ -24,34 +24,41 @@ final class ReverseWordsUITests: XCTestCase {
 
     func testReverseWordsFunctionality() throws {
         let textField = app.textFields["textFieldIdentifier"]
-        let reverseButton = app.buttons["actionButtonIdentifier"]
+        let segmentControl = app.segmentedControls["segmentControlIdentifier"]
         let reversedLabel = app.staticTexts["reverseTextIdentifier"]
-        
+
         XCTAssertTrue(textField.waitForExistence(timeout: 5), "Text field does not exist.")
-        
+        XCTAssertTrue(segmentControl.waitForExistence(timeout: 5), "Segment control does not exist.")
+
         textField.tap()
-        textField.typeText("Hello World")
+        textField.typeText("Hello World / Test")
         closeKeyboard()
-        
-        // Debug: Check if reverseButton is found and visible
-        if reverseButton.exists {
-            XCTAssertTrue(reverseButton.isHittable, "Reverse button is not hittable.")
-        } else {
-            XCTFail("Reverse button does not exist.")
-        }
-        
-        reverseButton.tap()
-        
-        // Use a different query if StaticText fails
-        let reversedLabelExists = reversedLabel.waitForExistence(timeout: 5)
-        
-        if reversedLabelExists {
-            XCTAssertEqual(reversedLabel.label, "olleH dlroW", "Expected reversed label text to be 'olleH dlroW'.")
-        } else {
-            XCTFail("Reversed label does not exist or cannot be found.")
-        }
-        
-        reverseButton.tap()
+
+        XCTAssertTrue(segmentControl.buttons.element(boundBy: 0).isSelected, "Default segment should be selected.")
+        XCTAssertTrue(reversedLabel.waitForExistence(timeout: 5), "Reversed label does not exist.")
+        XCTAssertEqual(reversedLabel.label, "olleH dlroW / tseT", "Expected reversed label text to be 'olleH dlroW / tseT' with '/' not reversed.")
+
+        segmentControl.buttons.element(boundBy: 1).tap()
+        XCTAssertTrue(segmentControl.buttons.element(boundBy: 1).isSelected, "Custom segment should be selected.")
+
+        let customTextField = app.textFields["customTextFieldIdentifier"]
+        XCTAssertTrue(customTextField.waitForExistence(timeout: 5), "Custom text field does not exist.")
+        customTextField.tap()
+        customTextField.clearText()
+        customTextField.typeText("Hello / World")
+        closeKeyboard()
+
+        textField.tap()
+        textField.clearText()
+        textField.typeText("Swift / iOS")
+        closeKeyboard()
+
+        XCTAssertTrue(reversedLabel.waitForExistence(timeout: 5), "Reversed label does not exist.")
+        XCTAssertEqual(reversedLabel.label, "tfiwS / SOi", "Expected reversed label text to be 'tfiwS / SOi' with '/' reversed.")
+
+        textField.tap()
+        textField.clearText()
+        closeKeyboard()
     }
 
     func closeKeyboard() {
