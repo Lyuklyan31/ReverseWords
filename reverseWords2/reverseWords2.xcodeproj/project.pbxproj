@@ -14,7 +14,27 @@
 		84436B6C2C5CCA7300813B31 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 84436B6B2C5CCA7300813B31 /* Base */; };
 		84436B752C5CCD3100813B31 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 84436B742C5CCD3100813B31 /* SnapKit */; };
 		84436B772C5CCFC900813B31 /* ReverseWordsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84436B762C5CCFC900813B31 /* ReverseWordsService.swift */; };
+		84BA06CD2C5CDDF2002A3893 /* reverseWords2UnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BA06CC2C5CDDF2002A3893 /* reverseWords2UnitTests.swift */; };
+		84BA06DA2C5CDE06002A3893 /* reverseWords2UnitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BA06D92C5CDE06002A3893 /* reverseWords2UnitUITests.swift */; };
+		84BA06DC2C5CDE06002A3893 /* reverseWords2UnitUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BA06DB2C5CDE06002A3893 /* reverseWords2UnitUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		84BA06CE2C5CDDF2002A3893 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84436B542C5CCA7000813B31 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 84436B5B2C5CCA7100813B31;
+			remoteInfo = reverseWords2;
+		};
+		84BA06DD2C5CDE06002A3893 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84436B542C5CCA7000813B31 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 84436B5B2C5CCA7100813B31;
+			remoteInfo = reverseWords2;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		84436B5C2C5CCA7100813B31 /* reverseWords2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = reverseWords2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -25,6 +45,11 @@
 		84436B6B2C5CCA7300813B31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84436B6D2C5CCA7300813B31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84436B762C5CCFC900813B31 /* ReverseWordsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseWordsService.swift; sourceTree = "<group>"; };
+		84BA06CA2C5CDDF2002A3893 /* reverseWords2UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = reverseWords2UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		84BA06CC2C5CDDF2002A3893 /* reverseWords2UnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = reverseWords2UnitTests.swift; sourceTree = "<group>"; };
+		84BA06D72C5CDE05002A3893 /* reverseWords2UnitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = reverseWords2UnitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		84BA06D92C5CDE06002A3893 /* reverseWords2UnitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = reverseWords2UnitUITests.swift; sourceTree = "<group>"; };
+		84BA06DB2C5CDE06002A3893 /* reverseWords2UnitUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = reverseWords2UnitUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +58,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				84436B752C5CCD3100813B31 /* SnapKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84BA06C72C5CDDF2002A3893 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84BA06D42C5CDE05002A3893 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,6 +90,8 @@
 			isa = PBXGroup;
 			children = (
 				84436B5C2C5CCA7100813B31 /* reverseWords2.app */,
+				84BA06CA2C5CDDF2002A3893 /* reverseWords2UnitTests.xctest */,
+				84BA06D72C5CDE05002A3893 /* reverseWords2UnitUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,8 +106,35 @@
 				84436B682C5CCA7300813B31 /* Assets.xcassets */,
 				84436B6A2C5CCA7300813B31 /* LaunchScreen.storyboard */,
 				84436B6D2C5CCA7300813B31 /* Info.plist */,
+				84BA06E22C5CDE0C002A3893 /* UnitTests */,
 			);
 			path = reverseWords2;
+			sourceTree = "<group>";
+		};
+		84BA06CB2C5CDDF2002A3893 /* reverseWords2UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				84BA06CC2C5CDDF2002A3893 /* reverseWords2UnitTests.swift */,
+			);
+			path = reverseWords2UnitTests;
+			sourceTree = "<group>";
+		};
+		84BA06D82C5CDE05002A3893 /* reverseWords2UnitUITests */ = {
+			isa = PBXGroup;
+			children = (
+				84BA06D92C5CDE06002A3893 /* reverseWords2UnitUITests.swift */,
+				84BA06DB2C5CDE06002A3893 /* reverseWords2UnitUITestsLaunchTests.swift */,
+			);
+			path = reverseWords2UnitUITests;
+			sourceTree = "<group>";
+		};
+		84BA06E22C5CDE0C002A3893 /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				84BA06CB2C5CDDF2002A3893 /* reverseWords2UnitTests */,
+				84BA06D82C5CDE05002A3893 /* reverseWords2UnitUITests */,
+			);
+			path = UnitTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -92,6 +160,42 @@
 			productReference = 84436B5C2C5CCA7100813B31 /* reverseWords2.app */;
 			productType = "com.apple.product-type.application";
 		};
+		84BA06C92C5CDDF2002A3893 /* reverseWords2UnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84BA06D22C5CDDF2002A3893 /* Build configuration list for PBXNativeTarget "reverseWords2UnitTests" */;
+			buildPhases = (
+				84BA06C62C5CDDF2002A3893 /* Sources */,
+				84BA06C72C5CDDF2002A3893 /* Frameworks */,
+				84BA06C82C5CDDF2002A3893 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				84BA06CF2C5CDDF2002A3893 /* PBXTargetDependency */,
+			);
+			name = reverseWords2UnitTests;
+			productName = reverseWords2UnitTests;
+			productReference = 84BA06CA2C5CDDF2002A3893 /* reverseWords2UnitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		84BA06D62C5CDE05002A3893 /* reverseWords2UnitUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84BA06DF2C5CDE06002A3893 /* Build configuration list for PBXNativeTarget "reverseWords2UnitUITests" */;
+			buildPhases = (
+				84BA06D32C5CDE05002A3893 /* Sources */,
+				84BA06D42C5CDE05002A3893 /* Frameworks */,
+				84BA06D52C5CDE05002A3893 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				84BA06DE2C5CDE06002A3893 /* PBXTargetDependency */,
+			);
+			name = reverseWords2UnitUITests;
+			productName = reverseWords2UnitUITests;
+			productReference = 84BA06D72C5CDE05002A3893 /* reverseWords2UnitUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -104,6 +208,14 @@
 				TargetAttributes = {
 					84436B5B2C5CCA7100813B31 = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					84BA06C92C5CDDF2002A3893 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 84436B5B2C5CCA7100813B31;
+					};
+					84BA06D62C5CDE05002A3893 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 84436B5B2C5CCA7100813B31;
 					};
 				};
 			};
@@ -124,6 +236,8 @@
 			projectRoot = "";
 			targets = (
 				84436B5B2C5CCA7100813B31 /* reverseWords2 */,
+				84BA06C92C5CDDF2002A3893 /* reverseWords2UnitTests */,
+				84BA06D62C5CDE05002A3893 /* reverseWords2UnitUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -135,6 +249,20 @@
 			files = (
 				84436B692C5CCA7300813B31 /* Assets.xcassets in Resources */,
 				84436B6C2C5CCA7300813B31 /* Base in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84BA06C82C5CDDF2002A3893 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84BA06D52C5CDE05002A3893 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,7 +280,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		84BA06C62C5CDDF2002A3893 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84BA06CD2C5CDDF2002A3893 /* reverseWords2UnitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84BA06D32C5CDE05002A3893 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84BA06DC2C5CDE06002A3893 /* reverseWords2UnitUITestsLaunchTests.swift in Sources */,
+				84BA06DA2C5CDE06002A3893 /* reverseWords2UnitUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		84BA06CF2C5CDDF2002A3893 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 84436B5B2C5CCA7100813B31 /* reverseWords2 */;
+			targetProxy = 84BA06CE2C5CDDF2002A3893 /* PBXContainerItemProxy */;
+		};
+		84BA06DE2C5CDE06002A3893 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 84436B5B2C5CCA7100813B31 /* reverseWords2 */;
+			targetProxy = 84BA06DD2C5CDE06002A3893 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		84436B6A2C5CCA7300813B31 /* LaunchScreen.storyboard */ = {
@@ -339,6 +497,76 @@
 			};
 			name = Release;
 		};
+		84BA06D02C5CDDF2002A3893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6D4397MTLK;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.Liuklian.Oleg.reverseWords2UnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/reverseWords2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/reverseWords2";
+			};
+			name = Debug;
+		};
+		84BA06D12C5CDDF2002A3893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6D4397MTLK;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.Liuklian.Oleg.reverseWords2UnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/reverseWords2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/reverseWords2";
+			};
+			name = Release;
+		};
+		84BA06E02C5CDE06002A3893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6D4397MTLK;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.Liuklian.Oleg.reverseWords2UnitUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = reverseWords2;
+			};
+			name = Debug;
+		};
+		84BA06E12C5CDE06002A3893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6D4397MTLK;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.Liuklian.Oleg.reverseWords2UnitUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = reverseWords2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -356,6 +584,24 @@
 			buildConfigurations = (
 				84436B712C5CCA7300813B31 /* Debug */,
 				84436B722C5CCA7300813B31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84BA06D22C5CDDF2002A3893 /* Build configuration list for PBXNativeTarget "reverseWords2UnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84BA06D02C5CDDF2002A3893 /* Debug */,
+				84BA06D12C5CDDF2002A3893 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84BA06DF2C5CDE06002A3893 /* Build configuration list for PBXNativeTarget "reverseWords2UnitUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84BA06E02C5CDE06002A3893 /* Debug */,
+				84BA06E12C5CDE06002A3893 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
