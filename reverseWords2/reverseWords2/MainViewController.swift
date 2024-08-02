@@ -19,8 +19,13 @@ class MainViewController: UIViewController {
     // UI Elements
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
+    
     private let reversTextField = UITextField()
-    private let textFieldLine = UIView()
+    private let configurationSegment = UISegmentedControl()
+    private let defaultTextLabel = UILabel()
+    private let ignoreTextField = UITextField()
+    private let resultLabel = UILabel()
+    
     private let reversedTextScrollView = UIScrollView()
     private let reversedTextLabel = UILabel()
     
