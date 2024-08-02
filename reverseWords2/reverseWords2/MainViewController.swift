@@ -68,7 +68,14 @@ class MainViewController: UIViewController {
         setupTitleLabel()
         setupDescriptionLabel()
         setupReversTextField()
-        setupTextFieldLine()
+        setupConfigurationSegment()
+        
+        if configurationSegment.selectedSegmentIndex == 0 {
+            setupDefaultLabel()
+        } else {
+            setupIgnoreTextField()
+        }
+        setupResultLabel()
         setupReversedTextScrollView()
         setupReversedTextLabel()
     }
@@ -111,7 +118,9 @@ class MainViewController: UIViewController {
     // Setup TextFieldForReverse
     private func setupReversTextField() {
         reversTextField.placeholder = "Text to reverse"
+        reversTextField.borderStyle = .roundedRect
         reversTextField.accessibilityIdentifier = "textFieldIdentifier"
+        
         
         view.addSubview(reversTextField)
         
@@ -123,17 +132,56 @@ class MainViewController: UIViewController {
         }
     }
     
-    // Setup LineForTextField
-    private func setupTextFieldLine() {
-        textFieldLine.backgroundColor = UIColor(.ownColorGray.opacity(0.3))
+    private func setupConfigurationSegment() {
+        configurationSegment.insertSegment(withTitle: "Default", at: 0, animated: true)
+        configurationSegment.insertSegment(withTitle: "Custom", at: 1, animated: true)
+        configurationSegment.selectedSegmentIndex = 0
         
-        view.addSubview(textFieldLine)
-        
-        textFieldLine.snp.makeConstraints { make in
-            make.height.equalTo(1)
+        view.addSubview(configurationSegment)
+        configurationSegment.snp.makeConstraints { make in
+            make.top.equalTo(reversTextField.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
-            make.top.equalTo(reversTextField.snp.bottom).offset(18)
+        }
+    }
+    
+    private func setupDefaultLabel() {
+        defaultTextLabel.text = "All characters exepct alphabetic symbols"
+        defaultTextLabel.font = UIFont.boldSystemFont(ofSize: 15)
+        defaultTextLabel.textAlignment = .center
+        
+        view.addSubview(defaultTextLabel)
+        defaultTextLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(configurationSegment.snp.bottom).offset(20)
+        }
+    }
+    
+    private func setupIgnoreTextField() {
+        ignoreTextField.placeholder = "Text to ignore"
+        ignoreTextField.borderStyle = .roundedRect
+        
+        view.addSubview(ignoreTextField)
+        ignoreTextField.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(configurationSegment.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+        }
+    }
+    
+    private func setupResultLabel() {
+        resultLabel.text = "Result:"
+        resultLabel.textAlignment = .center
+        
+        view.addSubview(resultLabel)
+        resultLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            if configurationSegment.selectedSegmentIndex == 0 {
+                make.top.equalTo(defaultTextLabel.snp.bottom).offset(30)
+            } else {
+                make.top.equalTo(ignoreTextField.snp.bottom).offset(30)
+            }
         }
     }
     
@@ -143,7 +191,7 @@ class MainViewController: UIViewController {
         
         reversedTextScrollView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(textFieldLine.snp.bottom).offset(24)
+            make.top.equalTo(resultLabel.snp.bottom).offset(24)
             make.height.equalTo(30)
         }
     }
@@ -166,6 +214,24 @@ class MainViewController: UIViewController {
         reversedTextLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         reversedTextLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
     }
+    
+//    func updateText(with text: String? = nil) {
+//        let text = text ?? reversTextField.text ?? ""
+//        let ignoreWords = Set(ignoreText.components(separatedBy: " ").filter { !$0.isEmpty })
+//        
+//        let isCustomMode = segmentControl.selectedSegmentIndex == 1
+//        let shouldReverseDigits = isCustomMode
+//        let shouldReverseSpecialCharacters = isCustomMode
+//
+//        reverseText.text = reverseWordsService.reverseWords(
+//            in: text,
+//            ignoring: ignoreWords,
+//            reverseDigits: shouldReverseDigits,
+//            reverseSpecialCharacters: shouldReverseSpecialCharacters,
+//            isCustomMode: isCustomMode
+//        )
+//        updateScrollViewContentSize()
+//    }
     
     
     // Setup gesture recognizers
@@ -201,19 +267,7 @@ extension MainViewController: UITextFieldDelegate {
         }
         return true
     }
-    
-    // Method called when editing begins
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textFieldLine.backgroundColor = UIColor.ownColorBlue
-    }
-    
-    // Method called when editing ends
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        textFieldLine.backgroundColor = textField.text?.isEmpty ?? true
-            ? UIColor(.ownColorDarkGray.opacity(0.3))
-            : UIColor.ownColorBlue
-    }
-    
+ 
     // Method to handle return key press
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
