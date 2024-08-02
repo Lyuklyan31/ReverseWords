@@ -23,15 +23,15 @@ class MainViewController: UIViewController {
     private let textFieldLine = UIView()
     private let reversedTextScrollView = UIScrollView()
     private let reversedTextLabel = UILabel()
-    private let actionButton = UIButton()
     
     private var currentState: ScreenState = .clear {
         didSet {
-            updateButtonAppearance()
+            
         }
     }
     
     private let reverseWordsService = ReverseWordsService()
+    var ignoreText = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +66,6 @@ class MainViewController: UIViewController {
         setupTextFieldLine()
         setupReversedTextScrollView()
         setupReversedTextLabel()
-        setupActionButton()
     }
     
     // Setup TitleLabel
@@ -163,23 +162,6 @@ class MainViewController: UIViewController {
         reversedTextLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
     }
     
-    // Setup ReverseAndClearButton
-    private func setupActionButton() {
-        actionButton.layer.cornerRadius = 14
-        actionButton.accessibilityIdentifier = "actionButtonIdentifier"
-        
-        view.addSubview(actionButton)
-        
-        actionButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(13)
-            make.trailing.equalToSuperview().offset(-13)
-            make.bottom.equalToSuperview().offset(-66)
-            make.height.equalTo(60)
-        }
-        
-        actionButton.addTarget(self, action: #selector(buttonReverse(_:)), for: .touchUpInside)
-        updateButtonAppearance()
-    }
     
     // Setup gesture recognizers
     private func setupGestures() {
@@ -195,41 +177,6 @@ class MainViewController: UIViewController {
     // Dismiss keyboard when tapping outside of the text field
     @objc private func dismissKeyboard() {
         view.endEditing(true)
-    }
-    
-    // Action method for the reverse/clear button
-    @objc private func buttonReverse(_ sender: Any) {
-        guard let text = reversTextField.text, !text.isEmpty else {
-            currentState = .clear
-            return
-        }
-        
-        if case .reversedText(let existingText) = currentState, existingText == text {
-            currentState = .clear
-            reversTextField.text = ""
-            reversedTextLabel.text = ""
-        } else {
-            currentState = .reversedText(textToReverse: text)
-            reversedTextLabel.text = reverseWordsInText(text)
-        }
-    }
-    
-    // Update button appearance based on the current state
-    private func updateButtonAppearance() {
-        switch currentState {
-        case .clear:
-            actionButton.setTitle("Reverse", for: .normal)
-            actionButton.backgroundColor = UIColor(.ownColorBlue.opacity(0.6))
-            actionButton.isEnabled = false
-        case .enteredText:
-            actionButton.setTitle("Reverse", for: .normal)
-            actionButton.backgroundColor = UIColor.ownColorBlue
-            actionButton.isEnabled = true
-        case .reversedText:
-            actionButton.setTitle("Clear", for: .normal)
-            actionButton.backgroundColor = UIColor.ownColorBlue
-            actionButton.isEnabled = true
-        }
     }
     
     // Reverse the text entered by the user
