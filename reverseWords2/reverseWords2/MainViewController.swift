@@ -24,10 +24,49 @@ class MainViewController: UIViewController {
     private let reversedTextScrollView = UIScrollView()
     private let reversedTextLabel = UILabel()
     private let actionButton = UIButton()
-
+    
+    private var currentState: ScreenState = .clear {
+        didSet {
+            updateButtonAppearance()
+        }
+    }
+    
+    private let reverseWordsService = ReverseWordsService()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        defaultConfiguration()
+    }
+    
+    // Initial configuration
+    private func defaultConfiguration() {
+        setupNavigationBar()
+        setupUI()
+        setupGestures()
+        setupDelegates()
+    }
+    
+    // Setup navigation bar appearance
+    private func setupNavigationBar() {
+        if let navigationBar = self.navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithDefaultBackground()
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        }
+        view.backgroundColor = .systemBackground
+        title = "Reverse Words"
+    }
+    
+    // Setup UI elements and constraints
+    private func setupUI() {
+        setupTitleLabel()
+        setupDescriptionLabel()
+        setupReversTextField()
+        setupTextFieldLine()
+        setupReversedTextScrollView()
+        setupReversedTextLabel()
+        setupActionButton()
     }
     
     // Setup TitleLabel
@@ -134,6 +173,95 @@ class MainViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-66)
             make.height.equalTo(60)
         }
+        
+        actionButton.addTarget(self, action: #selector(buttonReverse(_:)), for: .touchUpInside)
+        updateButtonAppearance()
+    }
+    
+    // Setup gesture recognizers
+    private func setupGestures() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    // Setup text field delegates
+    private func setupDelegates() {
+        reversTextField.delegate = self
+    }
+    
+    // Dismiss keyboard when tapping outside of the text field
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    // Action method for the reverse/clear button
+    @objc private func buttonReverse(_ sender: Any) {
+        guard let text = reversTextField.text, !text.isEmpty else {
+            currentState = .clear
+            return
+        }
+        
+        if case .reversedText(let existingText) = currentState, existingText == text {
+            currentState = .clear
+            reversTextField.text = ""
+            reversedTextLabel.text = ""
+        } else {
+            currentState = .reversedText(textToReverse: text)
+            reversedTextLabel.text = reverseWordsInText(text)
+        }
+    }
+    
+    // Update button appearance based on the current state
+    private func updateButtonAppearance() {
+        switch currentState {
+        case .clear:
+            actionButton.setTitle("Reverse", for: .normal)
+            actionButton.backgroundColor = UIColor(.ownColorBlue.opacity(0.6))
+            actionButton.isEnabled = false
+        case .enteredText:
+            actionButton.setTitle("Reverse", for: .normal)
+            actionButton.backgroundColor = UIColor.ownColorBlue
+            actionButton.isEnabled = true
+        case .reversedText:
+            actionButton.setTitle("Clear", for: .normal)
+            actionButton.backgroundColor = UIColor.ownColorBlue
+            actionButton.isEnabled = true
+        }
+    }
+    
+    // Reverse the text entered by the user
+    private func reverseWordsInText(_ text: String) -> String {
+        return text.split(separator: " ").map { String($0.reversed()) }.joined(separator: " ")
     }
 }
 
+// Extension to handle text field delegate methods
+extension MainViewController: UITextFieldDelegate {
+    // Method to handle text changes
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if let text = textField.text, let textRange = Range(range, in: text) {
+            let updatedText = text.replacingCharacters(in: textRange, with: string)
+            currentState = updatedText.isEmpty ? .clear : .enteredText
+            reversedTextLabel.text = updatedText.isEmpty ? "" : reversedTextLabel.text
+        }
+        return true
+    }
+    
+    // Method called when editing begins
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textFieldLine.backgroundColor = UIColor.ownColorBlue
+    }
+    
+    // Method called when editing ends
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textFieldLine.backgroundColor = textField.text?.isEmpty ?? true
+            ? UIColor(.ownColorDarkGray.opacity(0.3))
+            : UIColor.ownColorBlue
+    }
+    
+    // Method to handle return key press
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}

@@ -13,6 +13,7 @@
 		84436B692C5CCA7300813B31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84436B682C5CCA7300813B31 /* Assets.xcassets */; };
 		84436B6C2C5CCA7300813B31 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 84436B6B2C5CCA7300813B31 /* Base */; };
 		84436B752C5CCD3100813B31 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 84436B742C5CCD3100813B31 /* SnapKit */; };
+		84436B772C5CCFC900813B31 /* ReverseWordsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84436B762C5CCFC900813B31 /* ReverseWordsService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		84436B682C5CCA7300813B31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84436B6B2C5CCA7300813B31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84436B6D2C5CCA7300813B31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84436B762C5CCFC900813B31 /* ReverseWordsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseWordsService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				84436B5F2C5CCA7100813B31 /* AppDelegate.swift */,
 				84436B612C5CCA7100813B31 /* SceneDelegate.swift */,
 				84436B632C5CCA7100813B31 /* MainViewController.swift */,
+				84436B762C5CCFC900813B31 /* ReverseWordsService.swift */,
 				84436B682C5CCA7300813B31 /* Assets.xcassets */,
 				84436B6A2C5CCA7300813B31 /* LaunchScreen.storyboard */,
 				84436B6D2C5CCA7300813B31 /* Info.plist */,
@@ -142,6 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84436B772C5CCFC900813B31 /* ReverseWordsService.swift in Sources */,
 				84436B642C5CCA7100813B31 /* MainViewController.swift in Sources */,
 				84436B602C5CCA7100813B31 /* AppDelegate.swift in Sources */,
 				84436B622C5CCA7100813B31 /* SceneDelegate.swift in Sources */,
