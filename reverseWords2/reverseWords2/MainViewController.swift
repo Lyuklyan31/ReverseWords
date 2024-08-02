@@ -7,6 +7,12 @@
 
 import UIKit
 
+enum ScreenState: Equatable {
+    case clear
+    case enteredText
+    case reversedText(textToReverse: String)
+}
+
 class MainViewController: UIViewController {
 
     override func viewDidLoad() {
