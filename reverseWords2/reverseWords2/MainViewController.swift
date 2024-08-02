@@ -40,7 +40,6 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         defaultConfiguration()
-        updateSegmentMode()
     }
     
     // Initial configuration
@@ -49,6 +48,7 @@ class MainViewController: UIViewController {
         setupUI()
         setupGestures()
         setupDelegates()
+        updateSegmentMode()
     }
     
     // Setup navigation bar appearance
