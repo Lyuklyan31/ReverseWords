@@ -9,9 +9,8 @@ import UIKit
 import SnapKit
 
 enum ScreenState: Equatable {
-    case clear
-    case enteredText
-    case reversedText(textToReverse: String)
+    case defaultSegment
+    case customSegment
 }
 
 class MainViewController: UIViewController {
@@ -29,18 +28,19 @@ class MainViewController: UIViewController {
     private let reversedTextScrollView = UIScrollView()
     private let reversedTextLabel = UILabel()
     
-    private var currentState: ScreenState = .clear {
+    private var currentState: ScreenState = .defaultSegment {
         didSet {
-            
+            updateSegmentMode()
         }
     }
     
     private let reverseWordsService = ReverseWordsService()
-    var ignoreText = ""
+    private var ignoreText = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         defaultConfiguration()
+        updateSegmentMode()
     }
     
     // Initial configuration
@@ -69,12 +69,8 @@ class MainViewController: UIViewController {
         setupDescriptionLabel()
         setupReversTextField()
         setupConfigurationSegment()
-        
-        if configurationSegment.selectedSegmentIndex == 0 {
-            setupDefaultLabel()
-        } else {
-            setupIgnoreTextField()
-        }
+        setupDefaultLabel()
+        setupIgnoreTextField()
         setupResultLabel()
         setupReversedTextScrollView()
         setupReversedTextLabel()
@@ -96,7 +92,7 @@ class MainViewController: UIViewController {
         }
     }
     
-    // Setup TitleDescriptionLabel
+    // Setup DescriptionLabel
     private func setupDescriptionLabel() {
         descriptionLabel.text = "This application will reverse your words. Please type text below"
         descriptionLabel.textAlignment = .center
@@ -115,12 +111,11 @@ class MainViewController: UIViewController {
         }
     }
     
-    // Setup TextFieldForReverse
+    // Setup TextField for reversing
     private func setupReversTextField() {
         reversTextField.placeholder = "Text to reverse"
         reversTextField.borderStyle = .roundedRect
         reversTextField.accessibilityIdentifier = "textFieldIdentifier"
-        
         
         view.addSubview(reversTextField)
         
@@ -132,10 +127,13 @@ class MainViewController: UIViewController {
         }
     }
     
+    // Setup configuration segment
     private func setupConfigurationSegment() {
         configurationSegment.insertSegment(withTitle: "Default", at: 0, animated: true)
         configurationSegment.insertSegment(withTitle: "Custom", at: 1, animated: true)
         configurationSegment.selectedSegmentIndex = 0
+        configurationSegment.accessibilityIdentifier = "segmentControlIdentifier"
+        configurationSegment.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
         
         view.addSubview(configurationSegment)
         configurationSegment.snp.makeConstraints { make in
@@ -145,10 +143,16 @@ class MainViewController: UIViewController {
         }
     }
     
+    @objc private func segmentChanged() {
+        currentState = configurationSegment.selectedSegmentIndex == 0 ? .defaultSegment : .customSegment
+    }
+    
+    // Setup DefaultLabel
     private func setupDefaultLabel() {
-        defaultTextLabel.text = "All characters exepct alphabetic symbols"
+        defaultTextLabel.text = "All characters except alphabetic symbols"
         defaultTextLabel.font = UIFont.boldSystemFont(ofSize: 15)
         defaultTextLabel.textAlignment = .center
+        defaultTextLabel.accessibilityIdentifier = "defaultTextLabelIdentifier"
         
         view.addSubview(defaultTextLabel)
         defaultTextLabel.snp.makeConstraints { make in
@@ -157,9 +161,13 @@ class MainViewController: UIViewController {
         }
     }
     
+    // Setup IgnoreTextField
     private func setupIgnoreTextField() {
         ignoreTextField.placeholder = "Text to ignore"
         ignoreTextField.borderStyle = .roundedRect
+        ignoreTextField.accessibilityIdentifier = "customTextFieldIdentifier"
+        
+        ignoreTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         view.addSubview(ignoreTextField)
         ignoreTextField.snp.makeConstraints { make in
@@ -170,6 +178,7 @@ class MainViewController: UIViewController {
         }
     }
     
+    // Setup ResultLabel
     private func setupResultLabel() {
         resultLabel.text = "Result:"
         resultLabel.textAlignment = .center
@@ -177,15 +186,11 @@ class MainViewController: UIViewController {
         view.addSubview(resultLabel)
         resultLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            if configurationSegment.selectedSegmentIndex == 0 {
-                make.top.equalTo(defaultTextLabel.snp.bottom).offset(30)
-            } else {
-                make.top.equalTo(ignoreTextField.snp.bottom).offset(30)
-            }
+            make.top.equalTo(configurationSegment.snp.bottom).offset(70)
         }
     }
     
-    // Setup ScrollViewForTextReversed and ReversedTextLabel
+    // Setup ScrollView for reversed text and ReversedTextLabel
     private func setupReversedTextScrollView() {
         view.addSubview(reversedTextScrollView)
         
@@ -215,24 +220,45 @@ class MainViewController: UIViewController {
         reversedTextLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
     }
     
-//    func updateText(with text: String? = nil) {
-//        let text = text ?? reversTextField.text ?? ""
-//        let ignoreWords = Set(ignoreText.components(separatedBy: " ").filter { !$0.isEmpty })
-//        
-//        let isCustomMode = segmentControl.selectedSegmentIndex == 1
-//        let shouldReverseDigits = isCustomMode
-//        let shouldReverseSpecialCharacters = isCustomMode
-//
-//        reverseText.text = reverseWordsService.reverseWords(
-//            in: text,
-//            ignoring: ignoreWords,
-//            reverseDigits: shouldReverseDigits,
-//            reverseSpecialCharacters: shouldReverseSpecialCharacters,
-//            isCustomMode: isCustomMode
-//        )
-//        updateScrollViewContentSize()
-//    }
+    // Update text with considering ignored words and current settings
+    func updateText(with text: String? = nil) {
+        let text = text ?? reversTextField.text ?? ""
+        let ignoreWords = Set(ignoreText.components(separatedBy: " ").filter { !$0.isEmpty })
+        
+        let isCustomMode = configurationSegment.selectedSegmentIndex == 1
+        let shouldReverseDigits = isCustomMode
+        let shouldReverseSpecialCharacters = isCustomMode
+
+        reversedTextLabel.text = reverseWordsService.reverseWords(
+            in: text,
+            ignoring: ignoreWords,
+            reverseDigits: shouldReverseDigits,
+            reverseSpecialCharacters: shouldReverseSpecialCharacters,
+            isCustomMode: isCustomMode
+        )
+    }
     
+    // Update UI for the selected segment
+    private func updateSegmentMode() {
+        switch currentState {
+        case .defaultSegment:
+            dismissKeyboard()
+            updateText()
+            defaultTextLabel.isHidden = false
+            ignoreTextField.isHidden = true
+        case .customSegment:
+            dismissKeyboard()
+            updateText()
+            defaultTextLabel.isHidden = true
+            ignoreTextField.isHidden = false
+        }
+    }
+    
+    // Update ignored text field
+    func didUpdateIgnoreTextField(_ text: String) {
+        ignoreText = text
+        updateText()
+    }
     
     // Setup gesture recognizers
     private func setupGestures() {
@@ -243,9 +269,15 @@ class MainViewController: UIViewController {
     // Setup text field delegates
     private func setupDelegates() {
         reversTextField.delegate = self
+        ignoreTextField.delegate = self
     }
     
-    // Dismiss keyboard when tapping outside of the text field
+    // Handler for text field change
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        didUpdateIgnoreTextField(textField.text ?? "")
+    }
+    
+    // Dismiss keyboard when tapping outside the text field
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -256,19 +288,17 @@ class MainViewController: UIViewController {
     }
 }
 
-// Extension to handle text field delegate methods
+// Extension for handling text field delegate methods
 extension MainViewController: UITextFieldDelegate {
-    // Method to handle text changes
+    // Method for handling text changes
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if let text = textField.text, let textRange = Range(range, in: text) {
-            let updatedText = text.replacingCharacters(in: textRange, with: string)
-            currentState = updatedText.isEmpty ? .clear : .enteredText
-            reversedTextLabel.text = updatedText.isEmpty ? "" : reversedTextLabel.text
-        }
+        let currentText = textField.text ?? ""
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        updateText(with: updatedText)
         return true
     }
- 
-    // Method to handle return key press
+    
+    // Method for handling return key press
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
