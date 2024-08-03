@@ -87,8 +87,7 @@ class MainViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(64)
-            make.leading.equalTo(view).offset(16)
-            make.trailing.equalTo(view).offset(-16)
+            make.leading.trailing.equalTo(view).inset(16)
         }
     }
     
@@ -96,8 +95,8 @@ class MainViewController: UIViewController {
     private func setupDescriptionLabel() {
         descriptionLabel.text = "This application will reverse your words. Please type text below"
         descriptionLabel.textAlignment = .center
-        descriptionLabel.textColor = UIColor(.ownColorDarkGray.opacity(0.3))
-        descriptionLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        descriptionLabel.textColor = UIColor(.ownColorDarkGray.opacity(0.6))
+        descriptionLabel.font = UIFont.systemFont(ofSize: 17)
         descriptionLabel.numberOfLines = 2
         descriptionLabel.lineBreakMode = .byWordWrapping
         
@@ -106,8 +105,7 @@ class MainViewController: UIViewController {
         descriptionLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(titleLabel.snp.bottom).offset(16)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.trailing.equalToSuperview().inset(16)
         }
     }
     
@@ -122,8 +120,7 @@ class MainViewController: UIViewController {
         reversTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(descriptionLabel.snp.bottom).offset(59)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.trailing.equalToSuperview().inset(16)
         }
     }
     
@@ -132,14 +129,13 @@ class MainViewController: UIViewController {
         configurationSegment.insertSegment(withTitle: "Default", at: 0, animated: true)
         configurationSegment.insertSegment(withTitle: "Custom", at: 1, animated: true)
         configurationSegment.selectedSegmentIndex = 0
-        configurationSegment.accessibilityIdentifier = "segmentControlIdentifier"
+        configurationSegment.accessibilityIdentifier = "segmentControl"
         configurationSegment.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
         
         view.addSubview(configurationSegment)
         configurationSegment.snp.makeConstraints { make in
             make.top.equalTo(reversTextField.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.trailing.equalToSuperview().inset(16)
         }
     }
     
@@ -152,7 +148,7 @@ class MainViewController: UIViewController {
         defaultTextLabel.text = "All characters except alphabetic symbols"
         defaultTextLabel.font = UIFont.boldSystemFont(ofSize: 15)
         defaultTextLabel.textAlignment = .center
-        defaultTextLabel.accessibilityIdentifier = "defaultTextLabelIdentifier"
+        defaultTextLabel.accessibilityIdentifier = "defaultTextLabel"
         
         view.addSubview(defaultTextLabel)
         defaultTextLabel.snp.makeConstraints { make in
@@ -165,7 +161,7 @@ class MainViewController: UIViewController {
     private func setupIgnoreTextField() {
         ignoreTextField.placeholder = "Text to ignore"
         ignoreTextField.borderStyle = .roundedRect
-        ignoreTextField.accessibilityIdentifier = "customTextFieldIdentifier"
+        ignoreTextField.accessibilityIdentifier = "customTextField"
         
         ignoreTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
@@ -173,8 +169,7 @@ class MainViewController: UIViewController {
         ignoreTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(configurationSegment.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.trailing.equalToSuperview().inset(16)
         }
     }
     
@@ -182,6 +177,7 @@ class MainViewController: UIViewController {
     private func setupResultLabel() {
         resultLabel.text = "Result:"
         resultLabel.textAlignment = .center
+        resultLabel.accessibilityIdentifier = "reverseTextIdentifier"
         
         view.addSubview(resultLabel)
         resultLabel.snp.makeConstraints { make in
@@ -195,7 +191,7 @@ class MainViewController: UIViewController {
         view.addSubview(reversedTextScrollView)
         
         reversedTextScrollView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(16)
             make.top.equalTo(resultLabel.snp.bottom).offset(24)
             make.height.equalTo(30)
         }
@@ -203,17 +199,15 @@ class MainViewController: UIViewController {
     
     // Setup ReversedTextLabel
     private func setupReversedTextLabel() {
-        reversedTextLabel.textColor = UIColor.ownColorBlue
         reversedTextLabel.font = UIFont.systemFont(ofSize: 24)
-        reversedTextLabel.accessibilityIdentifier = "reverseTextIdentifier"
+        reversedTextLabel.accessibilityIdentifier = "reverseText"
         
         reversedTextScrollView.addSubview(reversedTextLabel)
         
         reversedTextLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
             make.top.bottom.equalToSuperview()
             make.height.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(16)
         }
         
         reversedTextLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -234,7 +228,8 @@ class MainViewController: UIViewController {
             ignoring: ignoreWords,
             reverseDigits: shouldReverseDigits,
             reverseSpecialCharacters: shouldReverseSpecialCharacters,
-            isCustomMode: isCustomMode
+            isCustomMode: isCustomMode,
+            ignoreCharacters: Set(ignoreText)
         )
     }
     
@@ -256,7 +251,7 @@ class MainViewController: UIViewController {
     
     // Update ignored text field
     func didUpdateIgnoreTextField(_ text: String) {
-        ignoreText = text
+        ignoreText = text.lowercased()
         updateText()
     }
     
