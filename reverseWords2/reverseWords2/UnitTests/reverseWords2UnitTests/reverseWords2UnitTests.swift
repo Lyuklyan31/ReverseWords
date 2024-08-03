@@ -8,43 +8,51 @@
 import XCTest
 @testable import reverseWords2
 
-final class ReverseWordsTests: XCTestCase {
-    
-    var reverseWordsService: ReverseWordsService!
-    
-    override func setUpWithError() throws {
-        reverseWordsService = ReverseWordsService()
+class ReverseWordsServiceTests: XCTestCase {
+    var service: ReverseWordsService!
+
+    override func setUp() {
+        super.setUp()
+        service = ReverseWordsService()
     }
 
-    override func tearDownWithError() throws {
-        reverseWordsService = nil
+    override func tearDown() {
+        service = nil
+        super.tearDown()
     }
 
-    func testReverseWords() throws {
-        // Test case with a single word
-        let singleWord = "Test"
-        let reversedSingleWord = reverseWordsService.reverseWords(in: singleWord)
-        XCTAssertEqual(reversedSingleWord, "tseT", "The word should be reversed correctly.")
-        
-        // Test case with multiple words
-        let multipleWords = "Test string"
-        let reversedMultipleWords = reverseWordsService.reverseWords(in: multipleWords)
-        XCTAssertEqual(reversedMultipleWords, "tseT gnirts", "Each word in the sentence should be reversed correctly.")
-        
-        // Test case with empty string
-        let emptyString = ""
-        let reversedEmptyString = reverseWordsService.reverseWords(in: emptyString)
-        XCTAssertEqual(reversedEmptyString, "", "Reversing an empty string should return an empty string.")
-        
-        // Test case with special characters
-        let specialCharacters = "Test, string!"
-        let reversedSpecialCharacters = reverseWordsService.reverseWords(in: specialCharacters)
-        XCTAssertEqual(reversedSpecialCharacters, ",tseT !gnirts", "Special characters should remain in their positions relative to words.")
+    func testDefaultExclusion() {
+        let input = "Foxminded cool 24/7"
+        let expectedOutput = "dednimxoF looc 24/7"
+        let result = service.reverseWords(in: input, ignoring: [], reverseDigits: false, reverseSpecialCharacters: false, isCustomMode: false, ignoreCharacters: [])
+        XCTAssertEqual(result, expectedOutput)
     }
-    
-    func testPerformanceExample() throws {
-        measure {
-            _ = reverseWordsService.reverseWords(in: "This is a performance test case to measure the time of reversing words.")
-        }
+
+    func testCustomExclusion() {
+        let input = "Foxminded cool 24/7"
+        let expectedOutput = "dexdnimoF oocl 7/42"
+        let result = service.reverseWords(in: input, ignoring: [], reverseDigits: true, reverseSpecialCharacters: true, isCustomMode: true, ignoreCharacters: ["x", "l"])
+        XCTAssertEqual(result, expectedOutput)
+    }
+
+    func testDefaultExclusionSecond() {
+        let input = "abcd efgh"
+        let expectedOutput = "dcba hgfe"
+        let result = service.reverseWords(in: input, ignoring: [], reverseDigits: false, reverseSpecialCharacters: false, isCustomMode: false, ignoreCharacters: [])
+        XCTAssertEqual(result, expectedOutput)
+    }
+
+    func testCustomExclusionSecond() {
+        let input = "a1bcd efg!h"
+        let expectedOutput = "d1cba hgf!e"
+        let result = service.reverseWords(in: input, ignoring: [], reverseDigits: false, reverseSpecialCharacters: false, isCustomMode: false, ignoreCharacters: [])
+        XCTAssertEqual(result, expectedOutput)
+    }
+
+    func testCustomExclusionThird() {
+        let input = "a1bcd efglh"
+        let expectedOutput = "dcb1a hgfle"
+        let result = service.reverseWords(in: input, ignoring: [], reverseDigits: true, reverseSpecialCharacters: true, isCustomMode: true, ignoreCharacters: ["x", "l"])
+        XCTAssertEqual(result, expectedOutput)
     }
 }

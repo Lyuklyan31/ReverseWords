@@ -9,9 +9,8 @@ import UIKit
 import SnapKit
 
 enum ScreenState: Equatable {
-    case clear
-    case enteredText
-    case reversedText(textToReverse: String)
+    case defaultSegment
+    case customSegment
 }
 
 class MainViewController: UIViewController {
@@ -19,19 +18,24 @@ class MainViewController: UIViewController {
     // UI Elements
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
+    
     private let reversTextField = UITextField()
-    private let textFieldLine = UIView()
+    private let configurationSegment = UISegmentedControl()
+    private let defaultTextLabel = UILabel()
+    private let ignoreTextField = UITextField()
+    private let resultLabel = UILabel()
+    
     private let reversedTextScrollView = UIScrollView()
     private let reversedTextLabel = UILabel()
-    private let actionButton = UIButton()
     
-    private var currentState: ScreenState = .clear {
+    private var currentState: ScreenState = .defaultSegment {
         didSet {
-            updateButtonAppearance()
+            updateSegmentMode()
         }
     }
     
     private let reverseWordsService = ReverseWordsService()
+    private var ignoreText = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +48,7 @@ class MainViewController: UIViewController {
         setupUI()
         setupGestures()
         setupDelegates()
+        updateSegmentMode()
     }
     
     // Setup navigation bar appearance
@@ -63,10 +68,12 @@ class MainViewController: UIViewController {
         setupTitleLabel()
         setupDescriptionLabel()
         setupReversTextField()
-        setupTextFieldLine()
+        setupConfigurationSegment()
+        setupDefaultLabel()
+        setupIgnoreTextField()
+        setupResultLabel()
         setupReversedTextScrollView()
         setupReversedTextLabel()
-        setupActionButton()
     }
     
     // Setup TitleLabel
@@ -80,17 +87,16 @@ class MainViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(64)
-            make.leading.equalTo(view).offset(16)
-            make.trailing.equalTo(view).offset(-16)
+            make.leading.trailing.equalTo(view).inset(16)
         }
     }
     
-    // Setup TitleDescriptionLabel
+    // Setup DescriptionLabel
     private func setupDescriptionLabel() {
         descriptionLabel.text = "This application will reverse your words. Please type text below"
         descriptionLabel.textAlignment = .center
-        descriptionLabel.textColor = UIColor(.ownColorDarkGray.opacity(0.3))
-        descriptionLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        descriptionLabel.textColor = UIColor(.ownColorDarkGray.opacity(0.6))
+        descriptionLabel.font = UIFont.systemFont(ofSize: 17)
         descriptionLabel.numberOfLines = 2
         descriptionLabel.lineBreakMode = .byWordWrapping
         
@@ -99,86 +105,154 @@ class MainViewController: UIViewController {
         descriptionLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(titleLabel.snp.bottom).offset(16)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.trailing.equalToSuperview().inset(16)
         }
     }
     
-    // Setup TextFieldForReverse
+    // Setup TextField for reversing
     private func setupReversTextField() {
         reversTextField.placeholder = "Text to reverse"
-        reversTextField.accessibilityIdentifier = "textFieldIdentifier"
+        reversTextField.borderStyle = .roundedRect
+        reversTextField.accessibilityIdentifier = "textField"
         
         view.addSubview(reversTextField)
         
         reversTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(descriptionLabel.snp.bottom).offset(59)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.trailing.equalToSuperview().inset(16)
         }
     }
     
-    // Setup LineForTextField
-    private func setupTextFieldLine() {
-        textFieldLine.backgroundColor = UIColor(.ownColorGray.opacity(0.3))
+    // Setup configuration segment
+    private func setupConfigurationSegment() {
+        configurationSegment.insertSegment(withTitle: "Default", at: 0, animated: true)
+        configurationSegment.insertSegment(withTitle: "Custom", at: 1, animated: true)
+        configurationSegment.selectedSegmentIndex = 0
+        configurationSegment.accessibilityIdentifier = "segmentControl"
+        configurationSegment.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
         
-        view.addSubview(textFieldLine)
-        
-        textFieldLine.snp.makeConstraints { make in
-            make.height.equalTo(1)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            make.top.equalTo(reversTextField.snp.bottom).offset(18)
+        view.addSubview(configurationSegment)
+        configurationSegment.snp.makeConstraints { make in
+            make.top.equalTo(reversTextField.snp.bottom).offset(20)
+            make.leading.trailing.equalToSuperview().inset(16)
         }
     }
     
-    // Setup ScrollViewForTextReversed and ReversedTextLabel
+    @objc private func segmentChanged() {
+        currentState = configurationSegment.selectedSegmentIndex == 0 ? .defaultSegment : .customSegment
+    }
+    
+    // Setup DefaultLabel
+    private func setupDefaultLabel() {
+        defaultTextLabel.text = "All characters except alphabetic symbols"
+        defaultTextLabel.font = UIFont.boldSystemFont(ofSize: 15)
+        defaultTextLabel.textAlignment = .center
+        defaultTextLabel.accessibilityIdentifier = "defaultTextLabel"
+        
+        view.addSubview(defaultTextLabel)
+        defaultTextLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(configurationSegment.snp.bottom).offset(24)
+        }
+    }
+    
+    // Setup IgnoreTextField
+    private func setupIgnoreTextField() {
+        ignoreTextField.placeholder = "Text to ignore"
+        ignoreTextField.borderStyle = .roundedRect
+        ignoreTextField.accessibilityIdentifier = "customTextField"
+        
+        ignoreTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        
+        view.addSubview(ignoreTextField)
+        ignoreTextField.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(configurationSegment.snp.bottom).offset(25)
+            make.leading.trailing.equalToSuperview().inset(16)
+        }
+    }
+    
+    // Setup ResultLabel
+    private func setupResultLabel() {
+        resultLabel.text = "Result:"
+        resultLabel.textAlignment = .center
+        resultLabel.font = UIFont.systemFont(ofSize: 18)
+        
+        view.addSubview(resultLabel)
+        resultLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(configurationSegment.snp.bottom).offset(85)
+        }
+    }
+    
+    // Setup ScrollView for reversed text and ReversedTextLabel
     private func setupReversedTextScrollView() {
         view.addSubview(reversedTextScrollView)
         
         reversedTextScrollView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(textFieldLine.snp.bottom).offset(24)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.top.equalTo(resultLabel.snp.bottom).offset(24)
             make.height.equalTo(30)
         }
     }
     
     // Setup ReversedTextLabel
     private func setupReversedTextLabel() {
-        reversedTextLabel.textColor = UIColor.ownColorBlue
         reversedTextLabel.font = UIFont.systemFont(ofSize: 24)
-        reversedTextLabel.accessibilityIdentifier = "reverseTextIdentifier"
+        reversedTextLabel.accessibilityIdentifier = "reverseText"
         
         reversedTextScrollView.addSubview(reversedTextLabel)
         
         reversedTextLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
             make.top.bottom.equalToSuperview()
             make.height.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(16)
         }
         
         reversedTextLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         reversedTextLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
     }
     
-    // Setup ReverseAndClearButton
-    private func setupActionButton() {
-        actionButton.layer.cornerRadius = 14
-        actionButton.accessibilityIdentifier = "actionButtonIdentifier"
+    // Update text with considering ignored words and current settings
+    func updateText(with text: String? = nil) {
+        let text = text ?? reversTextField.text ?? ""
+        let ignoreWords = Set(ignoreText.components(separatedBy: " ").filter { !$0.isEmpty })
         
-        view.addSubview(actionButton)
-        
-        actionButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(13)
-            make.trailing.equalToSuperview().offset(-13)
-            make.bottom.equalToSuperview().offset(-66)
-            make.height.equalTo(60)
+        let isCustomMode = configurationSegment.selectedSegmentIndex == 1
+        let shouldReverseDigits = isCustomMode
+        let shouldReverseSpecialCharacters = isCustomMode
+
+        reversedTextLabel.text = reverseWordsService.reverseWords(
+            in: text,
+            ignoring: ignoreWords,
+            reverseDigits: shouldReverseDigits,
+            reverseSpecialCharacters: shouldReverseSpecialCharacters,
+            isCustomMode: isCustomMode,
+            ignoreCharacters: Set(ignoreText)
+        )
+    }
+    
+    // Update UI for the selected segment
+    private func updateSegmentMode() {
+        switch currentState {
+        case .defaultSegment:
+            dismissKeyboard()
+            updateText()
+            defaultTextLabel.isHidden = false
+            ignoreTextField.isHidden = true
+        case .customSegment:
+            dismissKeyboard()
+            updateText()
+            defaultTextLabel.isHidden = true
+            ignoreTextField.isHidden = false
         }
-        
-        actionButton.addTarget(self, action: #selector(buttonReverse(_:)), for: .touchUpInside)
-        updateButtonAppearance()
+    }
+    
+    // Update ignored text field
+    func didUpdateIgnoreTextField(_ text: String) {
+        ignoreText = text.lowercased()
+        updateText()
     }
     
     // Setup gesture recognizers
@@ -190,46 +264,17 @@ class MainViewController: UIViewController {
     // Setup text field delegates
     private func setupDelegates() {
         reversTextField.delegate = self
+        ignoreTextField.delegate = self
     }
     
-    // Dismiss keyboard when tapping outside of the text field
+    // Handler for text field change
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        didUpdateIgnoreTextField(textField.text ?? "")
+    }
+    
+    // Dismiss keyboard when tapping outside the text field
     @objc private func dismissKeyboard() {
         view.endEditing(true)
-    }
-    
-    // Action method for the reverse/clear button
-    @objc private func buttonReverse(_ sender: Any) {
-        guard let text = reversTextField.text, !text.isEmpty else {
-            currentState = .clear
-            return
-        }
-        
-        if case .reversedText(let existingText) = currentState, existingText == text {
-            currentState = .clear
-            reversTextField.text = ""
-            reversedTextLabel.text = ""
-        } else {
-            currentState = .reversedText(textToReverse: text)
-            reversedTextLabel.text = reverseWordsInText(text)
-        }
-    }
-    
-    // Update button appearance based on the current state
-    private func updateButtonAppearance() {
-        switch currentState {
-        case .clear:
-            actionButton.setTitle("Reverse", for: .normal)
-            actionButton.backgroundColor = UIColor(.ownColorBlue.opacity(0.6))
-            actionButton.isEnabled = false
-        case .enteredText:
-            actionButton.setTitle("Reverse", for: .normal)
-            actionButton.backgroundColor = UIColor.ownColorBlue
-            actionButton.isEnabled = true
-        case .reversedText:
-            actionButton.setTitle("Clear", for: .normal)
-            actionButton.backgroundColor = UIColor.ownColorBlue
-            actionButton.isEnabled = true
-        }
     }
     
     // Reverse the text entered by the user
@@ -238,31 +283,17 @@ class MainViewController: UIViewController {
     }
 }
 
-// Extension to handle text field delegate methods
+// Extension for handling text field delegate methods
 extension MainViewController: UITextFieldDelegate {
-    // Method to handle text changes
+    // Method for handling text changes
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if let text = textField.text, let textRange = Range(range, in: text) {
-            let updatedText = text.replacingCharacters(in: textRange, with: string)
-            currentState = updatedText.isEmpty ? .clear : .enteredText
-            reversedTextLabel.text = updatedText.isEmpty ? "" : reversedTextLabel.text
-        }
+        let currentText = textField.text ?? ""
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        updateText(with: updatedText)
         return true
     }
     
-    // Method called when editing begins
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textFieldLine.backgroundColor = UIColor.ownColorBlue
-    }
-    
-    // Method called when editing ends
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        textFieldLine.backgroundColor = textField.text?.isEmpty ?? true
-            ? UIColor(.ownColorDarkGray.opacity(0.3))
-            : UIColor.ownColorBlue
-    }
-    
-    // Method to handle return key press
+    // Method for handling return key press
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

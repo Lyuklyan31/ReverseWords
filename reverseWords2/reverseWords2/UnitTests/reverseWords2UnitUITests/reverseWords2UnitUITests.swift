@@ -8,7 +8,7 @@
 import XCTest
 @testable import reverseWords2
 
-final class ReverseWordsUITests: XCTestCase {
+class MainViewControllerUITests: XCTestCase {
 
     var app: XCUIApplication!
 
@@ -18,55 +18,66 @@ final class ReverseWordsUITests: XCTestCase {
         app.launch()
     }
 
-    override func tearDownWithError() throws {
-        app = nil
-    }
-
-    func testReverseWordsFunctionality() throws {
-        let textField = app.textFields["textFieldIdentifier"]
-        let reverseButton = app.buttons["actionButtonIdentifier"]
-        let reversedLabel = app.staticTexts["reverseTextIdentifier"]
-        
-        XCTAssertTrue(textField.waitForExistence(timeout: 5), "Text field does not exist.")
-        
+    func testDefaultExclusion() {
+        let textField = app.textFields["textField"]
         textField.tap()
-        textField.typeText("Hello World")
-        closeKeyboard()
-        
-        // Debug: Check if reverseButton is found and visible
-        if reverseButton.exists {
-            XCTAssertTrue(reverseButton.isHittable, "Reverse button is not hittable.")
-        } else {
-            XCTFail("Reverse button does not exist.")
-        }
-        
-        reverseButton.tap()
-        
-        // Use a different query if StaticText fails
-        let reversedLabelExists = reversedLabel.waitForExistence(timeout: 5)
-        
-        if reversedLabelExists {
-            XCTAssertEqual(reversedLabel.label, "olleH dlroW", "Expected reversed label text to be 'olleH dlroW'.")
-        } else {
-            XCTFail("Reversed label does not exist or cannot be found.")
-        }
-        
-        reverseButton.tap()
+        textField.typeText("Foxminded cool 24/7")
+
+        app.segmentedControls["segmentControl"].buttons["Default"].tap()
+
+        let resultLabel = app.staticTexts["reverseText"]
+        XCTAssertEqual(resultLabel.label, "dednimxoF looc 24/7")
     }
 
-    func closeKeyboard() {
-        app.keyboards.buttons["Return"].tap()
+    func testCustomExclusion() {
+        let textField = app.textFields["textField"]
+        textField.tap()
+        textField.typeText("Foxminded cool 24/7")
+
+        app.segmentedControls["segmentControl"].buttons["Custom"].tap()
+
+        let customTextField = app.textFields["customTextField"]
+        customTextField.tap()
+        customTextField.typeText("xl")
+
+        let resultLabel = app.staticTexts["reverseText"]
+        XCTAssertEqual(resultLabel.label, "dexdnimoF oocl 7/42")
     }
-}
 
-private extension XCUIElement {
-    func clearText() {
-        guard let stringValue = self.value as? String else {
-            return
-        }
+    func testDefaultExclusionSecond() {
+        let textField = app.textFields["textField"]
+        textField.tap()
+        textField.typeText("abcd efgh")
 
-        self.tap()
-        let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: stringValue.count)
-        self.typeText(deleteString)
+        app.segmentedControls["segmentControl"].buttons["Default"].tap()
+
+        let resultLabel = app.staticTexts["reverseText"]
+        XCTAssertEqual(resultLabel.label, "dcba hgfe")
+    }
+
+    func testCustomExclusionSecond() {
+        let textField = app.textFields["textField"]
+        textField.tap()
+        textField.typeText("a1bcd efg!h")
+
+        app.segmentedControls["segmentControl"].buttons["Default"].tap()
+
+        let resultLabel = app.staticTexts["reverseText"]
+        XCTAssertEqual(resultLabel.label, "d1cba hgf!e")
+    }
+
+    func testCustomExclusionThird() {
+        let textField = app.textFields["textField"]
+        textField.tap()
+        textField.typeText("a1bcd efglh")
+
+        app.segmentedControls["segmentControl"].buttons["Custom"].tap()
+
+        let customTextField = app.textFields["customTextField"]
+        customTextField.tap()
+        customTextField.typeText("xl")
+
+        let resultLabel = app.staticTexts["reverseText"]
+        XCTAssertEqual(resultLabel.label, "dcb1a hgfle")
     }
 }
