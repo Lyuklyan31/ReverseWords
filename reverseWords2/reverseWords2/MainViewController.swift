@@ -113,7 +113,7 @@ class MainViewController: UIViewController {
     private func setupReversTextField() {
         reversTextField.placeholder = "Text to reverse"
         reversTextField.borderStyle = .roundedRect
-        reversTextField.accessibilityIdentifier = "textFieldIdentifier"
+        reversTextField.accessibilityIdentifier = "textField"
         
         view.addSubview(reversTextField)
         
@@ -153,7 +153,7 @@ class MainViewController: UIViewController {
         view.addSubview(defaultTextLabel)
         defaultTextLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(configurationSegment.snp.bottom).offset(20)
+            make.top.equalTo(configurationSegment.snp.bottom).offset(24)
         }
     }
     
@@ -168,7 +168,7 @@ class MainViewController: UIViewController {
         view.addSubview(ignoreTextField)
         ignoreTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(configurationSegment.snp.bottom).offset(20)
+            make.top.equalTo(configurationSegment.snp.bottom).offset(25)
             make.leading.trailing.equalToSuperview().inset(16)
         }
     }
@@ -177,12 +177,12 @@ class MainViewController: UIViewController {
     private func setupResultLabel() {
         resultLabel.text = "Result:"
         resultLabel.textAlignment = .center
-        resultLabel.accessibilityIdentifier = "reverseTextIdentifier"
+        resultLabel.font = UIFont.systemFont(ofSize: 18)
         
         view.addSubview(resultLabel)
         resultLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(configurationSegment.snp.bottom).offset(70)
+            make.top.equalTo(configurationSegment.snp.bottom).offset(85)
         }
     }
     
