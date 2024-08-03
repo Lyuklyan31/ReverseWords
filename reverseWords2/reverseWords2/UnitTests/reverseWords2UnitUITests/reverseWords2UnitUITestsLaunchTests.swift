@@ -22,9 +22,9 @@ final class ReverseWordsUITestsLaunchTests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        XCTAssertTrue(app.textFields["textFieldIdentifier"].exists, "Text field should exist on launch.")
+        XCTAssertTrue(app.textFields["textField"].exists, "Text field should exist on launch.")
         
-        XCTAssertTrue(app.segmentedControls["segmentControlIdentifier"].exists, "Segment control should exist on launch.")
+        XCTAssertTrue(app.segmentedControls["segmentControl"].exists, "Segment control should exist on launch.")
         
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Launch Screen"
