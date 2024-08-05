@@ -11,7 +11,7 @@ import SnapKit
 enum ScreenState: Equatable {
     case clear
     case enteredText
-    case reversedText(textToReverse: String)
+    case reversedText(text: String)
 }
 
 class MainViewController: UIViewController {
