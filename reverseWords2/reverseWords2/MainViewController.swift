@@ -11,7 +11,7 @@ import SnapKit
 enum ScreenState: Equatable {
     case clear
     case enteredText
-    case reversedText(textToReverse: String)
+    case reversedText(text: String)
 }
 
 class MainViewController: UIViewController {
@@ -107,6 +107,7 @@ class MainViewController: UIViewController {
     // Setup TextFieldForReverse
     private func setupReversTextField() {
         reversTextField.placeholder = "Text to reverse"
+        reversTextField.accessibilityIdentifier = "textFieldIdentifier"
         
         view.addSubview(reversTextField)
         
@@ -147,6 +148,7 @@ class MainViewController: UIViewController {
     private func setupReversedTextLabel() {
         reversedTextLabel.textColor = UIColor.ownColorBlue
         reversedTextLabel.font = UIFont.systemFont(ofSize: 24)
+        reversedTextLabel.accessibilityIdentifier = "reverseTextIdentifier"
         
         reversedTextScrollView.addSubview(reversedTextLabel)
         
@@ -164,6 +166,7 @@ class MainViewController: UIViewController {
     // Setup ReverseAndClearButton
     private func setupActionButton() {
         actionButton.layer.cornerRadius = 14
+        actionButton.accessibilityIdentifier = "actionButtonIdentifier"
         
         view.addSubview(actionButton)
         
