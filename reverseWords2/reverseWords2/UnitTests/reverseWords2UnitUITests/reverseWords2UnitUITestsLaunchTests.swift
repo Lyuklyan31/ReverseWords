@@ -18,7 +18,7 @@ final class ReverseWordsUITestsLaunchTests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testLaunch() throws {
+    func testLaunch_withTextFieldAndSegmentControlPresence() throws {
         let app = XCUIApplication()
         app.launch()
 
