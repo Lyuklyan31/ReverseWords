@@ -5,66 +5,70 @@
 //  Created by admin on 02.08.2024.
 //
 
-import UIKit
-import SnapKit
+import UIKit // Імпортую фреймворк UIKit для доступу до всіх його класів і методів крім тих що позначені "private і fileprivate"
+import SnapKit // Імпортую SnapKit для зручнішого та зрозумілішого написання констрейнтів
 
-enum ScreenState: Equatable {
-    case defaultSegment
-    case customSegment
+enum ScreenState { // створюю енам з 2 кейсами для відображення або дефолт тексту або тексфілда для ігнорування
+    case defaultSegment // у цьому кейсі буде дефолт текст
+    case customSegment // у цьому кейсі буде ігнор текстфілд
 }
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController { // оголошую клас MainViewController та наслідуюсь у класу UIViewController та отрмую всі класи методи і проперті які мають відкритий доступ тобто всі окрім private i fileprivate також маю можливість оверрайдити(перевизначити можливості базовго класу) сторед проперті базового класу оверайднути не можна
     
-    // UI Elements
-    private let titleLabel = UILabel()
-    private let descriptionLabel = UILabel()
+    //MARK: UI Elements
     
-    private let reversTextField = UITextField()
-    private let configurationSegment = UISegmentedControl()
-    private let defaultTextLabel = UILabel()
-    private let ignoreTextField = UITextField()
-    private let resultLabel = UILabel()
+    private let titleLabel = UILabel() // створюю екземпляр класу UILabel() та створюю лейбл для заголока
+    private let descriptionLabel = UILabel() // створюю екземпляр класу UILabel() та створюю опис про що ця апка
     
-    private let reversedTextScrollView = UIScrollView()
-    private let reversedTextLabel = UILabel()
+    private let reversTextField = UITextField() // створюю екземпляр класу UITextField() та створюю текстове поле для уводу того, що потрібно реверсити
+    private let configurationSegment = UISegmentedControl() // створюю екземпляр класу UISegmentedControl() для реалізації вибору між станами енам
+    private let defaultTextLabel = UILabel() // напис який буде в опції дефолт екземпляр класу UILabel()
+    private let ignoreTextField = UITextField() // текстове поле для ігнорування екземпляр класу UITextField()
+    private let resultLabel = UILabel() // лейбл для напису "Result" екземпляр класу UILabel()
+    private let reversedTextLabel = UILabel() // текст який буде реверснутий екземпляр класу UILabel()
+    private let reversedTextScrollView = UIScrollView() // екземпляр класу UIScrollView() для прокручування сторінки в тому разі якшо контент ширший за дефолт екран
     
-    private var currentState: ScreenState = .defaultSegment {
-        didSet {
-            updateSegmentMode()
+    private var currentState: ScreenState = .defaultSegment { // оголошую обчислювальну змінну currentState з типом енама "ScreenState" і по дефолту має кейс .defaultSegment
+        didSet { // проперті обсервер стежить за зміною currentState і спрацьовує після зміни кейсу
+            updateSegmentMode() // метод який мніяє/оновлює юай
         }
     }
     
-    private let reverseWordsService = ReverseWordsService()
-    private var ignoreText = ""
+    private let reverseWordsService = ReverseWordsService() // створюю екземпляр класу ReverseWordsService() для реалізації логіку правильного реверсу
+    private var ignoreText = "" // змінна для тексту який буде уводитись у текстфілд ігнорі для подальшої роботи з нею у методах
+    
+        //Усе що позначенн private означає що до цих проперті констант методів... буде доступ тільки у межах цього класу
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        defaultConfiguration()
+        defaultConfiguration() // виклик функції з всією логікою та UI
     }
     
     // Initial configuration
     private func defaultConfiguration() {
-        setupNavigationBar()
-        setupUI()
-        setupGestures()
-        setupDelegates()
-        updateSegmentMode()
+        setupNavigationBar() // встановлення навігейшин бара
+        setupUI() // встановлення UI та констрейнтів
+        setupGestures() // встановвлення закриття клавіатури по тапу будь де на екрані
+        setupDelegates() // встановлення делегатів
+        updateSegmentMode() // встановлення логіки сегмента
     }
     
     // Setup navigation bar appearance
-    private func setupNavigationBar() {
-        if let navigationBar = self.navigationController?.navigationBar {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithDefaultBackground()
-            navigationBar.standardAppearance = appearance
-            navigationBar.scrollEdgeAppearance = appearance
+    private func setupNavigationBar() { // оголошення приватної функції для встановленна навігейшин бара
+        if let navigationBar = self.navigationController?.navigationBar { // перевіряється чи мій MainViewController обгорнутий у файлі SceneDelegate у navigation controller і чи може мати навігейшин бра тобто ось цей рядок з SceneDelegate
+            ///  window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+            ///  тобто віндов я розумію як екран який ми бачимо і я присвоюю йому MainViewController як кореневий вʼю контроллер і обгортаю його одразу у навігейшин контроллер
+            let appearance = UINavigationBarAppearance() // тут я створюю екземпляр класу вигляду вʼю контроллера і отримую доступ до всіх його настройок вигляду як ти називав "з коробки"
+            appearance.configureWithDefaultBackground() // підлаштовує колір таб бару під колір беграунда екрана
+            navigationBar.standardAppearance = appearance // вигляд таб бару без скролу
+            navigationBar.scrollEdgeAppearance = appearance // вигляд таб бару під час скролу
         }
-        view.backgroundColor = .systemBackground
-        title = "Reverse Words"
+        view.backgroundColor = .systemBackground // задаю колір бекграунда .systemBackground який міняється в залежності від теми на пристрої
+        title = "Reverse Words" // заголовок таб бару
     }
     
     // Setup UI elements and constraints
-    private func setupUI() {
+    private func setupUI() { // встановлення UI елемнтів за допомогою приватного метода у якому виклик інших методів
         setupTitleLabel()
         setupDescriptionLabel()
         setupReversTextField()
@@ -77,12 +81,12 @@ class MainViewController: UIViewController {
     }
     
     // Setup TitleLabel
-    private func setupTitleLabel() {
-        titleLabel.text = "Reverse Words"
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 34)
-        titleLabel.textAlignment = .center
+    private func setupTitleLabel() { // метод для встановлення тайтла заголовка
+        titleLabel.text = "Reverse Words" // текст лейбла
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 34) // розмір та стиль тексту
+        titleLabel.textAlignment = .center // розміщення на екрані
         
-        view.addSubview(titleLabel)
+        view.addSubview(titleLabel) // додаю до view тобто view тут MainViewController сабвʼю titleLabel
         
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
