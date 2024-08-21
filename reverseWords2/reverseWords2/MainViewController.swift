@@ -8,7 +8,7 @@
 import UIKit // Імпортую фреймворк UIKit для доступу до всіх його класів і методів крім тих що позначені "private і fileprivate"
 import SnapKit // Імпортую SnapKit для зручнішого та зрозумілішого написання констрейнтів
 
-enum ScreenState { // створюю енам з 2 кейсами для відображення або дефолт тексту або тексфілда для ігнорування
+enum ScreenState: Equatable { // створюю енам з 2 кейсами для відображення або дефолт тексту або тексфілда для ігнорування
     case defaultSegment // у цьому кейсі буде дефолт текст
     case customSegment // у цьому кейсі буде ігнор текстфілд
 }
@@ -84,19 +84,16 @@ class MainViewController: UIViewController { // оголошую клас MainVi
     private func setupTitleLabel() { // метод для встановлення тайтла заголовка
         titleLabel.text = "Reverse Words" // текст лейбла
         titleLabel.font = UIFont.boldSystemFont(ofSize: 34) // розмір та стиль тексту
-        titleLabel.textAlignment = .center // розміщуюю текст в центрі екрану
+        titleLabel.textAlignment = .center // вирівнюю текст горизонтально по центру UILabel
         
-        view.addSubview(titleLabel) // додаю до MainViewController сабвʼю titleLabel
+        view.addSubview(titleLabel) // додаю до супервʼю titleLabel
         
         titleLabel.snp.makeConstraints { make in // викликаю клоужер для налаштування автолейоту
             // titleLabel це вʼю
             // snp це екстеншин до UIView що дає доступ до налаштування автолейота
             make.centerX.equalToSuperview() // розміщую середину titleLabel по Х у середині супер вʼю по Х
             make.top.equalTo(view.safeAreaLayoutGuide).offset(64) // роблю констрейнт між верхом titleLabel та безпечною зоною супервʼю 64
-            //make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
-            //            make.leading.equalTo(view.snp.leading).offset(16) // Два рядки з офсетами будуть працювати як один з інсетом
-            //            make.trailing.equalTo(view.snp.trailing).offset(16)
-            // по суті тут відступів не потрібно адже лейбл центрується по центру X
+            make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
         }
     }
     
@@ -113,7 +110,7 @@ class MainViewController: UIViewController { // оголошую клас MainVi
         descriptionLabel.snp.makeConstraints { make in // викликаю клоужер для налаштування автолейоту
             make.centerX.equalToSuperview() // розміщую середину descriptionLabel по Х у середині супер вʼю по Х
             make.top.equalTo(titleLabel.snp.bottom).offset(16) // роблю констрейнт між верхом descriptionLabel та між низом titleLabel 16
-            make.leading.trailing.equalToSuperview().inset(16)
+            make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
         }
     }
     
@@ -143,7 +140,7 @@ class MainViewController: UIViewController { // оголошую клас MainVi
         // action - селектор що вказує на метод segmentChanged, який буде викликаний при зміні вибору сегмента
         // for: .valueChanged  тип події яка спрацьовує коли вибір сегмента зміниться
         
-        view.addSubview(configurationSegment) // додаю на вʼю контроллер configurationSegment
+        view.addSubview(configurationSegment) // додаю на супервʼю configurationSegment
         configurationSegment.snp.makeConstraints { make in // створюю обмеження
             make.top.equalTo(reversTextField.snp.bottom).offset(20) // верхня сторона сегмента та нижня сторона текстфілда будуть мати відтсуп 20
             make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
