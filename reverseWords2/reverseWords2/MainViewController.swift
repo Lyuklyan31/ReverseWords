@@ -37,10 +37,12 @@ class MainViewController: UIViewController { // оголошую клас MainVi
     private let reverseWordsService = ReverseWordsService() // створюю екземпляр класу ReverseWordsService() для реалізації логіку правильного реверсу
     private var ignoreText = "" // змінна для тексту який буде уводитись у текстфілд ігнорі для подальшої роботи з нею у методах
     
-        //Усе що позначенн private означає що до цих проперті констант методів... буде доступ тільки у межах цього класу
+    //Усе що позначенн private означає що до цих проперті констант методів... буде доступ тільки у межах цього класу
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // override перевизначає метод viewDidLoad з базового класу UIViewController
+        // func viewDidLoad() Метод, що автоматично викликається після завантаження перегляду вʼю в пам'ять
         defaultConfiguration() // виклик функції з всією логікою та UI
     }
     
@@ -73,8 +75,6 @@ class MainViewController: UIViewController { // оголошую клас MainVi
         setupDescriptionLabel()
         setupReversTextField()
         setupConfigurationSegment()
-        setupDefaultLabel()
-        setupIgnoreTextField()
         setupResultLabel()
         setupReversedTextScrollView()
         setupReversedTextLabel()
@@ -84,222 +84,248 @@ class MainViewController: UIViewController { // оголошую клас MainVi
     private func setupTitleLabel() { // метод для встановлення тайтла заголовка
         titleLabel.text = "Reverse Words" // текст лейбла
         titleLabel.font = UIFont.boldSystemFont(ofSize: 34) // розмір та стиль тексту
-        titleLabel.textAlignment = .center // розміщення на екрані
+        titleLabel.textAlignment = .center // розміщуюю текст в центрі екрану
         
-        view.addSubview(titleLabel) // додаю до view тобто view тут MainViewController сабвʼю titleLabel
+        view.addSubview(titleLabel) // додаю до MainViewController сабвʼю titleLabel
         
-        titleLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(64)
-            make.leading.trailing.equalTo(view).inset(16)
+        titleLabel.snp.makeConstraints { make in // викликаю клоужер для налаштування автолейоту
+            // titleLabel це вʼю
+            // snp це екстеншин до UIView що дає доступ до налаштування автолейота
+            make.centerX.equalToSuperview() // розміщую середину titleLabel по Х у середині супер вʼю по Х
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(64) // роблю констрейнт між верхом titleLabel та безпечною зоною супервʼю 64
+            //make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
+            //            make.leading.equalTo(view.snp.leading).offset(16) // Два рядки з офсетами будуть працювати як один з інсетом
+            //            make.trailing.equalTo(view.snp.trailing).offset(16)
+            // по суті тут відступів не потрібно адже лейбл центрується по центру X
         }
     }
     
     // Setup DescriptionLabel
-    private func setupDescriptionLabel() {
-        descriptionLabel.text = "This application will reverse your words. Please type text below"
-        descriptionLabel.textAlignment = .center
-        descriptionLabel.textColor = UIColor(.ownColorDarkGray.opacity(0.6))
-        descriptionLabel.font = UIFont.systemFont(ofSize: 17)
-        descriptionLabel.numberOfLines = 2
-        descriptionLabel.lineBreakMode = .byWordWrapping
+    private func setupDescriptionLabel() { // метод для встановлення тексту опису що робить програма який знаходиться під заголовком
+        descriptionLabel.text = "This application will reverse your words. Please type text below" // присвоюю текст лейблу
+        descriptionLabel.textAlignment = .center // розміщуюю текст в центрі екрану
+        descriptionLabel.textColor = UIColor(.ownColorDarkGray.opacity(0.6)) // задаю колір
+        descriptionLabel.font = UIFont.systemFont(ofSize: 17) // задаю розмір шрифту
+        descriptionLabel.numberOfLines = 2 // задаю максимально можливу кількість рядків лейбла
         
-        view.addSubview(descriptionLabel)
+        view.addSubview(descriptionLabel) // додаю до супервʼю descriptionLabel
         
-        descriptionLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(titleLabel.snp.bottom).offset(16)
+        descriptionLabel.snp.makeConstraints { make in // викликаю клоужер для налаштування автолейоту
+            make.centerX.equalToSuperview() // розміщую середину descriptionLabel по Х у середині супер вʼю по Х
+            make.top.equalTo(titleLabel.snp.bottom).offset(16) // роблю констрейнт між верхом descriptionLabel та між низом titleLabel 16
             make.leading.trailing.equalToSuperview().inset(16)
         }
     }
     
     // Setup TextField for reversing
-    private func setupReversTextField() {
-        reversTextField.placeholder = "Text to reverse"
-        reversTextField.borderStyle = .roundedRect
-        reversTextField.accessibilityIdentifier = "textField"
+    private func setupReversTextField() { // приватний метод встановлення текстфілда
+        reversTextField.placeholder = "Text to reverse" // текст який відображається коли текстфілд пустий
+        reversTextField.borderStyle = .roundedRect // задаю рамку обведення
+        reversTextField.accessibilityIdentifier = "textField" // створюю індифікатор для Unit тестів
         
-        view.addSubview(reversTextField)
+        view.addSubview(reversTextField) // додаю до супервʼю reversTextField
         
-        reversTextField.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(descriptionLabel.snp.bottom).offset(59)
-            make.leading.trailing.equalToSuperview().inset(16)
+        reversTextField.snp.makeConstraints { make in // клоужер встановлення автолейота
+            make.centerX.equalToSuperview() // розміщую центр reversTextField в центрі супервʼю
+            make.top.equalTo(descriptionLabel.snp.bottom).offset(59) // відступ між верхньою стороною reversTextField та нижньою стороною descriptionLabel
+            make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
         }
     }
     
     // Setup configuration segment
-    private func setupConfigurationSegment() {
-        configurationSegment.insertSegment(withTitle: "Default", at: 0, animated: true)
-        configurationSegment.insertSegment(withTitle: "Custom", at: 1, animated: true)
-        configurationSegment.selectedSegmentIndex = 0
-        configurationSegment.accessibilityIdentifier = "segmentControl"
-        configurationSegment.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
+    private func setupConfigurationSegment() { // приватний метод для встановлення сегменту
+        configurationSegment.insertSegment(withTitle: "Default", at: 0, animated: true) // Створюю опцію сегмента даю назву ідекс і додаю анімацію
+        configurationSegment.insertSegment(withTitle: "Custom", at: 1, animated: true) // Створюю опцію сегмента даю назву ідекс і додаю анімацію
+        configurationSegment.selectedSegmentIndex = 0 // задаю опція по замовчуванню
+        configurationSegment.accessibilityIdentifier = "segmentControl" // індефікатор для Unit тестів
+        configurationSegment.addTarget(self, action: #selector(segmentChanged), for: .valueChanged) // додаю обробник подій
+        // self це обʼєкт що буде обробляти подію тобто тут це поточний клас MainViewController
+        // action - селектор що вказує на метод segmentChanged, який буде викликаний при зміні вибору сегмента
+        // for: .valueChanged  тип події яка спрацьовує коли вибір сегмента зміниться
         
-        view.addSubview(configurationSegment)
-        configurationSegment.snp.makeConstraints { make in
-            make.top.equalTo(reversTextField.snp.bottom).offset(20)
-            make.leading.trailing.equalToSuperview().inset(16)
+        view.addSubview(configurationSegment) // додаю на вʼю контроллер configurationSegment
+        configurationSegment.snp.makeConstraints { make in // створюю обмеження
+            make.top.equalTo(reversTextField.snp.bottom).offset(20) // верхня сторона сегмента та нижня сторона текстфілда будуть мати відтсуп 20
+            make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
         }
     }
     
-    @objc private func segmentChanged() {
+    @objc private func segmentChanged() { // ця функція позначенна @objc для того щоб її можна було використатии у селекторі обробника подій
         currentState = configurationSegment.selectedSegmentIndex == 0 ? .defaultSegment : .customSegment
+        // міняє поточний стан currentState в залежності від вибраної опції
+        // якщо вибраний selectedSegmentIndex рівний 0 то воно покаже юай який у кейсі .defaultSegment
+        // якщо вибраний selectedSegmentIndex рівний 0 то воно покаже юай який у кейсі .customSegment
     }
     
     // Setup DefaultLabel
-    private func setupDefaultLabel() {
-        defaultTextLabel.text = "All characters except alphabetic symbols"
-        defaultTextLabel.font = UIFont.boldSystemFont(ofSize: 15)
-        defaultTextLabel.textAlignment = .center
-        defaultTextLabel.accessibilityIdentifier = "defaultTextLabel"
+    private func setupDefaultLabel() { // приватний метод для встановлення лейбла який буде у стані дефолт
+        defaultTextLabel.text = "All characters except alphabetic symbols" // встановлююю текст для лейбла
+        defaultTextLabel.font = UIFont.boldSystemFont(ofSize: 15) // ромір шрифту лейбла
+        defaultTextLabel.textAlignment = .center // розміщення тексту по середині
+        defaultTextLabel.accessibilityIdentifier = "defaultTextLabel" // індифікатор для юніт тестів
         
-        view.addSubview(defaultTextLabel)
+        view.addSubview(defaultTextLabel) // додаю до супер вʼю дефолт лейбл
         defaultTextLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(configurationSegment.snp.bottom).offset(24)
+            make.centerX.equalToSuperview()  // розміщую середину по це центру Х
+            make.top.equalTo(configurationSegment.snp.bottom).offset(24) // роблю констрейнт між веерхом defaultTextLabel та низом configurationSegment
         }
     }
     
     // Setup IgnoreTextField
-    private func setupIgnoreTextField() {
-        ignoreTextField.placeholder = "Text to ignore"
-        ignoreTextField.borderStyle = .roundedRect
-        ignoreTextField.accessibilityIdentifier = "customTextField"
+    private func setupIgnoreTextField() { // приватний метод для встановлення текстфілда який буде у стані дефолт
+        ignoreTextField.placeholder = "Text to ignore" // плейсхолдер
+        ignoreTextField.borderStyle = .roundedRect // обводка таж шо я писав у горі
+        ignoreTextField.accessibilityIdentifier = "customTextField" // індифікатор для юніт теістів
         
         ignoreTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        // додаю обробник подій для текстового поля
+        // action: #selector(textFieldDidChange(_:)) метод який буде викликаний після виклку події editingChanged
+        //.editingChanged тип події яка спрацьовує при зміні тексту в ignoreTextField подія editingChanged викликається кожного разу коли текст у текстовому полі змінюється тобто при кожному введенні символу та видаленні символу
         
-        view.addSubview(ignoreTextField)
-        ignoreTextField.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(configurationSegment.snp.bottom).offset(25)
-            make.leading.trailing.equalToSuperview().inset(16)
+        view.addSubview(ignoreTextField)  // додаю до вʼю контроллера вʼюшку ігнор текстфілда
+        ignoreTextField.snp.makeConstraints { make in   // клоужер для створення обмежень
+            make.centerX.equalToSuperview()   // розміщую по це центру Х
+            make.top.equalTo(configurationSegment.snp.bottom).offset(25) // верхня сторона ignoreTextField буде мати відступ 20 від нижньої сторони configurationSegment
+            make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
         }
     }
     
     // Setup ResultLabel
-    private func setupResultLabel() {
-        resultLabel.text = "Result:"
-        resultLabel.textAlignment = .center
-        resultLabel.font = UIFont.systemFont(ofSize: 18)
+    private func setupResultLabel() { // приватний метод для лейбл результата
+        resultLabel.text = "Result:" // текст лейбла
+        resultLabel.textAlignment = .center // розміщення тексту у рядку
+        resultLabel.font = UIFont.systemFont(ofSize: 18) // розмір та шрифт лейбла
         
-        view.addSubview(resultLabel)
-        resultLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(configurationSegment.snp.bottom).offset(85)
+        view.addSubview(resultLabel) // додаю на вʼю лейбл
+        resultLabel.snp.makeConstraints { make in // клоужер для створення констрейнтів
+            make.centerX.equalTo(view.snp.centerX) // розміщую середину resultLabel по центру Х на супервʼю по центру по Х
+            make.top.equalTo(configurationSegment.snp.bottom).offset(85) // роблю відступ верехнього краю resultLabel до низу configurationSegment з відступом 85
         }
     }
     
     // Setup ScrollView for reversed text and ReversedTextLabel
-    private func setupReversedTextScrollView() {
-        view.addSubview(reversedTextScrollView)
+    private func setupReversedTextScrollView() {  // приватний метод для встановлення скролу
         
-        reversedTextScrollView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(16)
-            make.top.equalTo(resultLabel.snp.bottom).offset(24)
-            make.height.equalTo(30)
+        view.addSubview(reversedTextScrollView) // додаю скрол на вʼю
+        reversedTextScrollView.snp.makeConstraints { make in // клоужер для встановлення констрейнтів
+            make.leading.trailing.equalToSuperview().inset(16) // відступ зліва справа 16
+            make.top.equalTo(resultLabel.snp.bottom).offset(24) // відступ верхнього краю reversedTextScrollView до нижнього краю resultLabel
+            make.height.equalTo(30) // задаю висоту reversedTextScrollView
         }
     }
     
     // Setup ReversedTextLabel
-    private func setupReversedTextLabel() {
-        reversedTextLabel.font = UIFont.systemFont(ofSize: 24)
-        reversedTextLabel.accessibilityIdentifier = "reverseText"
+    private func setupReversedTextLabel() { // метод для встановлення реверснутого тексту у скролвʼю
+        reversedTextLabel.font = UIFont.systemFont(ofSize: 24) // розмір шрифту
+        reversedTextLabel.accessibilityIdentifier = "reverseText" // індифікатор для юніт тестів
         
-        reversedTextScrollView.addSubview(reversedTextLabel)
+        reversedTextScrollView.addSubview(reversedTextLabel) // додаю у reversedTextScrollView лейбл reversedTextLabel
         
-        reversedTextLabel.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.height.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(16)
+        reversedTextLabel.snp.makeConstraints { make in // клоужер для обмежень
+            make.bottom.equalTo(reversedTextScrollView.snp.bottom) // роблю нижній край reversedTextLabel рівний нижньому краю reversedTextScrollView
+            make.top.equalTo(reversedTextScrollView.snp.top) // роблю верхній край reversedTextLabel рівний верхньому краю reversedTextScrollView
+            make.height.equalToSuperview() // задаю висоту рівну супервʼю тобто reversedTextScrollView
+            make.leading.trailing.equalToSuperview() // задаю відступи злів та справа рівні reversedTextScrollView
         }
-        
         reversedTextLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        // setContentHuggingPriority метод що вказує на пріорітет обнімання(тобто розширення у разі збільшення тексту у лейблі)
+        //.defaultLow це значення пріорітету обнімання що означає що елемент має низький пріорітет і він не надто буде наполягати на збереження власного розміру
+        // .horizontal означає що це буде відбуватись тільки горизонтально тобто його ширина залежить від лейбла
         reversedTextLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        //setContentCompressionResistancePriority метод, який задає пріоритет стискання для даного виду компонента
+        // .defaultHigh значення пріоритету стиснення яке означає що елемент має високий пріоритет у стисненні reversedTextLabel буде наполягати на тому щоб зберігати свою ширину навіть якщо є обмеження простору
+        // for: .horizontal це вказує що налаштування застосовуються у горизонтальному напрямку
     }
     
     // Update text with considering ignored words and current settings
-    func updateText(with text: String? = nil) {
-        let text = text ?? reversTextField.text ?? ""
+    func updateText(with text: String? = nil) { // функція updateText має один параметр text який є опшиналом це означає що параметр може бути або String, або nil
+        let text = text ?? reversTextField.text ?? "" // цей рядок ініціалізує константу text перевіряє чи парпметр text не є nil якшо nil перевіряє reversTextField.text і якщо і цей параметр ніл використовую ""
         let ignoreWords = Set(ignoreText.components(separatedBy: " ").filter { !$0.isEmpty })
+        // Створюється набір ignoreWords. ignoreText розбивається на масив слів за допомогою компонента що відокремлює пробіли (" ")
+        // .filter { !$0.isEmpty } видаляє пусті рядки щоб набір містив тільки непорожні слова.
+        // Set(...) перетворює масив слів на множину що виключає повторювані слова
         
-        let isCustomMode = configurationSegment.selectedSegmentIndex == 1
-        let shouldReverseDigits = isCustomMode
-        let shouldReverseSpecialCharacters = isCustomMode
-
-        reversedTextLabel.text = reverseWordsService.reverseWords(
-            in: text,
-            ignoring: ignoreWords,
-            reverseDigits: shouldReverseDigits,
-            reverseSpecialCharacters: shouldReverseSpecialCharacters,
-            isCustomMode: isCustomMode,
-            ignoreCharacters: Set(ignoreText)
+        let isCustomMode = configurationSegment.selectedSegmentIndex == 1 // перевіряє чи вибрана опція рівна індексу 1 якщо так isCustomMode стає true якшо ні false
+        let shouldReverseDigits = isCustomMode // створюю булеву змінну shouldReverseDigits яка дорівнює значеню isCustomMode
+        let shouldReverseSpecialCharacters = isCustomMode // створюю булеву змінну shouldReverseSpecialCharacters яка дорівнює значеню isCustomMode
+        
+        reversedTextLabel.text = reverseWordsService.reverseWords( // викликаю метод сервісу reverseWordsService який створив для логіки реверсу
+            in: text, // передаю у нього текст
+            ignoring: ignoreWords, // слова ігнорування
+            reverseDigits: shouldReverseDigits, // булеву змінну чи повинні реверситись літери
+            reverseSpecialCharacters: shouldReverseSpecialCharacters, // булеву змінну чи потрібно реверсити спец символи
+            isCustomMode: isCustomMode, // чи є це кастом опція сегмента
+            ignoreCharacters: Set(ignoreText) // і передаю набір символів для ігнорування
         )
     }
     
     // Update UI for the selected segment
-    private func updateSegmentMode() {
+    private func updateSegmentMode() { // приватний метод для встановлення поточного стану енам
         switch currentState {
-        case .defaultSegment:
-            dismissKeyboard()
-            updateText()
-            defaultTextLabel.isHidden = false
-            ignoreTextField.isHidden = true
-        case .customSegment:
-            dismissKeyboard()
-            updateText()
-            defaultTextLabel.isHidden = true
-            ignoreTextField.isHidden = false
+            // switch перевіряє значення змінної currentState
+            //визначає, який блок коду виконати, залежно від значення currentState.
+        case .defaultSegment: // switch перевіряє чи currentState є .defaultSegment якщо так виконує ці умови що у кейсі
+            dismissKeyboard() // закрити клавіатуру
+            setupDefaultLabel() // встановити напис який створенний для дефолт стану
+            updateText() // оновлює текст під певні умови
+            defaultTextLabel.isHidden = false // показує лейбл
+            ignoreTextField.isHidden = true // приховує текстфілд
+        case .customSegment:  // switch перевіряє чи currentState є .customSegment якщо так виконує ці умови що у кейсі
+            dismissKeyboard() // закрити клавіатуру
+            setupIgnoreTextField()// встановити текстфілд який створенний для ігнорування літер
+            updateText() // оновлює текст під певні умови
+            defaultTextLabel.isHidden = true // приховує лейбл
+            ignoreTextField.isHidden = false // показує текстфілд
         }
     }
     
     // Update ignored text field
+    // метод для однакової робити як з великими так і з малими літерами
     func didUpdateIgnoreTextField(_ text: String) {
-        ignoreText = text.lowercased()
-        updateText()
+        ignoreText = text.lowercased() // перевтворює всі літери що у текстфілд ігнорі на малі
+        updateText() // викликаю метод для оновлення тексту
     }
     
     // Setup gesture recognizers
-    private func setupGestures() {
+    private func setupGestures() { // приватний метод для налаштування жестів наприклад для обробки тапів і закриття клавіатури
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        // метод UITapGestureRecognizer для розпізнавання тапів на перегляді
+        // target: self вказує, що обробник жесту є поточний об'єкт контролер перегляду)
+        // action: #selector(dismissKeyboard) метод який буде викликаний при розпізнаванні жесту тут це dismissKeyboard
         view.addGestureRecognizer(tapGesture)
+        // Додає створений жест до view щоб обробляти тапи
     }
     
     // Setup text field delegates
-    private func setupDelegates() {
-        reversTextField.delegate = self
-        ignoreTextField.delegate = self
+    private func setupDelegates() { // приватний метод для встановлення делегатів
+        reversTextField.delegate = self // встановлюю делегат для reversTextField для обропки подій та дій які будуть відбуватись у текст філд
+        ignoreTextField.delegate = self // встановлюю делегат для ignoreTextField для обропки подій та дій які будуть відбуватись у текст філд
     }
     
     // Handler for text field change
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        didUpdateIgnoreTextField(textField.text ?? "")
+    @objc func textFieldDidChange(_ textField: UITextField) { // метод для обробки змін у текстовому полі
+        didUpdateIgnoreTextField(textField.text ?? "") // викликає метод didUpdateIgnoreTextField з текстом з textField або порожнім рядком, якщо текст є nil
     }
     
     // Dismiss keyboard when tapping outside the text field
-    @objc private func dismissKeyboard() {
-        view.endEditing(true)
-    }
-    
-    // Reverse the text entered by the user
-    private func reverseWordsInText(_ text: String) -> String {
-        return text.split(separator: " ").map { String($0.reversed()) }.joined(separator: " ")
+    @objc private func dismissKeyboard() { // метод для селектора у setupGestures() для закриття клавіатури
+        view.endEditing(true) // закриває клавіатуру приховуючи її
     }
 }
 
 // Extension for handling text field delegate methods
-extension MainViewController: UITextFieldDelegate {
+extension MainViewController: UITextFieldDelegate {   // естеншин для обробки методів делегата текстових полів
     // Method for handling text changes
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? ""
-        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
-        updateText(with: updatedText)
-        return true
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool { // метод для обробки змін у тексті текстового поля
+        let currentText = textField.text ?? "" // отримує поточний текст з текстового поля або порожній рядок якщо текст є nil
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)  // створює новий рядок, замінюючи вказаний діапазон range на новий текст string
+        updateText(with: updatedText)  // оновлює текст за допомогою методу updateText, передаючи новий текст
+        return true // Повертає true, що дозволяє зміну тексту
     }
     
     // Method for handling return key press
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool { // метод для обробки натискання клавіші Return (Enter)
+        textField.resignFirstResponder() // знімає фокус з текстового поля, ховаючи клавіатуру
+        return true // повертає true, що дозволяє завершити обробку натискання клавіші Return
     }
 }
