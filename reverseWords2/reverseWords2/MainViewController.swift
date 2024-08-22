@@ -88,15 +88,20 @@ class MainViewController: UIViewController { // оголошую клас MainVi
         
         view.addSubview(titleLabel) // додаю до супервʼю titleLabel
         
-        titleLabel.snp.makeConstraints { make in // викликаю клоужер для налаштування автолейоту
-            // titleLabel це вʼю
-            // snp це екстеншин до UIView що дає доступ до налаштування автолейота
-            make.centerX.equalToSuperview() // розміщую середину titleLabel по Х у середині супер вʼю по Х
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(64) // роблю констрейнт між верхом titleLabel та безпечною зоною супервʼю 64
-            make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
-        }
+//        titleLabel.snp.makeConstraints { make in // викликаю клоужер для налаштування автолейоту
+//            // titleLabel це вʼю
+//            // snp це екстеншин до UIView що дає доступ до налаштування автолейота
+//            make.centerX.equalToSuperview() // розміщую середину titleLabel по Х у середині супер вʼю по Х
+//            make.top.equalTo(view.safeAreaLayoutGuide).offset(64) // роблю констрейнт між верхом titleLabel та безпечною зоною супервʼю 64
+//            make.leading.trailing.equalToSuperview().inset(16) // за допомогою inset()одночаснно задаю констрейнти - та + тобто зліва та справа 16
+//        }
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
+        ])
+        
+        
     }
-    
+   
     // Setup DescriptionLabel
     private func setupDescriptionLabel() { // метод для встановлення тексту опису що робить програма який знаходиться під заголовком
         descriptionLabel.text = "This application will reverse your words. Please type text below" // присвоюю текст лейблу
