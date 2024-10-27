@@ -8,9 +8,15 @@
 import UIKit // Імпортую фреймворк UIKit для доступу до всіх його класів і методів крім тих що позначені "private і fileprivate"
 import SnapKit // Імпортую SnapKit для зручнішого та зрозумілішого написання констрейнтів
 
+
+enum ScreenState: Equatable {
+    case clear
+    case enteredText
+    case reversedText(text: String)
 enum ScreenState: Equatable { // створюю енам з 2 кейсами для відображення або дефолт тексту або тексфілда для ігнорування
     case defaultSegment // у цьому кейсі буде дефолт текст
     case customSegment // у цьому кейсі буде ігнор текстфілд
+
 }
 
 class MainViewController: UIViewController { // оголошую клас MainViewController та наслідуюсь у класу UIViewController та отрмую всі класи методи і проперті які мають відкритий доступ тобто всі окрім private i fileprivate також маю можливість оверрайдити(перевизначити можливості базовго класу) сторед проперті базового класу оверайднути не можна
